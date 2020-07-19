@@ -1,3 +1,11 @@
 <resources>
+    <string name="Events">События</string>
+    <string name="Reposts">Репосты</string>
+    <string name="Youtube_video">Видео с Youtube</string>
+    <string name="Sponsored_posts">Рекламные посты</string>
+
     <string name="app_name">NCraftMedia</string>
+
+
+
 </resources>

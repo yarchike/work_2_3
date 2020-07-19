@@ -4,7 +4,7 @@ data class Post(
     val id: Int,
     val date: Long,
     val autor: String,
-    val postText: String,
+    val postResurse: String,
     var like: Int = 0,
     val comments: Int = 0,
     val share: Int = 0,
@@ -12,9 +12,14 @@ data class Post(
     val isComment: Boolean,
     val isShare: Boolean,
     val adress:String,
-    val coordinates: Pair<Double, Double>
+    val coordinates: Pair<Double, Double>,
+    val type: PostTypes,
+    val url : String? = null,
+    val dateRepost: Long? = null,
+    val autorRepost: String? = null
 
 ) {
-
-
+    override fun toString(): String {
+        return "$id : $isLike : $like"
+    }
 }

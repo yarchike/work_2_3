@@ -1,12 +1,16 @@
 package com.yarchike.work_2_1
 
+import android.content.Intent
 import android.graphics.Color
+import android.icu.util.ValueIterator
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.postv_view.view.*
-
 
 
 class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -21,6 +25,11 @@ class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             )
         )
     }
+
+    fun getIteanList(): List<Post> {
+        return items
+    }
+
 
     override fun getItemCount(): Int {
         return items.size
@@ -48,11 +57,84 @@ class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val shareText = itemView.shareText
         val datePost = itemView.datePost
         val likeImage = itemView.likeImage
+        val imageLocal = itemView.imageLocal
+        val postImage = itemView.postImage
+        val repostImgAutor = itemView.repostImgAutor
+        val repostDateText = itemView.repostDateText
+        val repostAutorText = itemView.repostAutorText
+        val typePost = itemView.typePost
 
         fun bind(post: Post) {
+            val requesoption = RequestOptions().placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+            when (post.type) {
+                PostTypes.YoutubeVideo -> {
+                    postText.visibility = View.GONE
+                    postImage.visibility = View.VISIBLE
+                    postImage.setImageResource(R.drawable.ic_play)
+                    postImage.setOnClickListener {
+                        val intent = Intent().apply {
+                            action = Intent.ACTION_VIEW
+                            setData(Uri.parse(post.postResurse))
+                        }
+                        itemView.context.startActivity(intent)
+                    }
+                    typePost.setText(R.string.Youtube_video)
+                }
+                PostTypes.SponsoredPosts -> {
+                    postText.visibility = View.GONE
+                    postImage.visibility = View.VISIBLE
+                    Glide.with(itemView.context)
+                        .applyDefaultRequestOptions(requesoption)
+                        .load(post.postResurse)
+                        .into(postImage)
+                    postImage.setOnClickListener {
+                        val intent = Intent().apply {
+                            action = Intent.ACTION_VIEW
+                            setData(Uri.parse(post.url))
+                        }
+                        itemView.context.startActivity(intent)
+                    }
+                    typePost.setText(R.string.Sponsored_posts)
+                }
+                PostTypes.Reposts -> {
+                    repostImgAutor.visibility = View.VISIBLE
+                    repostDateText.visibility = View.VISIBLE
+                    repostAutorText.visibility = View.VISIBLE
+                    postText.setText(post.postResurse)
+                    repostDateText.setText(post.dateRepost?.toString())
+
+
+                    repostAutorText.setText(post.autorRepost)
+                    val publishedAgo = (java.lang.System.currentTimeMillis() - post.dateRepost!!) / 1000
+                    val toMin = if (publishedAgo > 3599) {
+                        publishedAgo / 3600
+                    } else {
+                        publishedAgo / 60
+                    }
+                    val dateString = when (publishedAgo) {
+                        in 0..59 -> "менее минуты назад"
+                        in 60..179 -> "минуту назад"
+                        in 180..299 -> "$toMin минуты назад"
+                        in 300..3599 -> "$toMin минут назад"
+                        in 3600..17999 -> "$toMin часа назад"
+                        else -> "$toMin часов назад "
+                    }
+                    repostDateText.setText(dateString)
+                    typePost.setText(R.string.Reposts)
+                }
+
+
+                PostTypes.Events -> {
+                    postText.setText(post.postResurse)
+                    typePost.setText(R.string.Events)
+                }
+            }
+
+
 
             autorText.setText(post.autor)
-            postText.setText(post.postText)
+
 
             if (post.like > 0) {
                 likeText.setText(post.like.toString())
@@ -86,18 +168,35 @@ class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 else -> "$toMin часов назад "
             }
             datePost.setText(dateString)
-            likeImage.setOnClickListener{
+
+
+
+            likeImage.setOnClickListener {
                 if (post.isLike) {
+                    post.isLike = false
+                    post.like--
                     likeImage.setImageResource(R.drawable.ic_no_like)
                     likeText.setTextColor(Color.BLACK)
-                  //  iteam.add(adapterPosition, post.copy(like = post.like - 1, isLike = false))
+                    likeText.text = post.like.toString()
                 } else {
+                    post.isLike = true
+                    post.like++
                     likeImage.setImageResource(R.drawable.ic_like)
                     likeText.setTextColor(Color.RED)
-                    //iteam.add(adapterPosition, post.copy(like = post.like + 1, isLike = true))
+                    likeText.text = post.like.toString()
 
                 }
             }
+            imageLocal.setOnClickListener {
+                val (lat, lng) = post.coordinates
+                val geoUri = Uri.parse("geo:$lat,$lng")
+                val intent = Intent().apply {
+                    action = Intent.ACTION_VIEW
+                    setData(geoUri)
+                }
+                itemView.context.startActivity(intent)
+            }
+
 
         }
 
