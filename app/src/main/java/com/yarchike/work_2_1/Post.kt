@@ -11,15 +11,16 @@ data class Post(
     var isLike: Boolean,
     val isComment: Boolean,
     val isShare: Boolean,
-    val adress:String,
+    val adress: String,
     val coordinates: Pair<Double, Double>,
     val type: PostTypes,
-    val url : String? = null,
+    val url: String? = null,
     val dateRepost: Long? = null,
-    val autorRepost: String? = null
+    val autorRepost: String? = null,
+    var hidePost: Boolean = false
 
 ) {
     override fun toString(): String {
-        return "$id : $isLike : $like"
+        return "$id : $hidePost"
     }
 }

@@ -2,7 +2,6 @@ package com.yarchike.work_2_1
 
 import android.content.Intent
 import android.graphics.Color
-import android.icu.util.ValueIterator
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,7 @@ import kotlinx.android.synthetic.main.postv_view.view.*
 
 class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var items: List<Post> = ArrayList()
+    var items: ArrayList<Post> = ArrayList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return PostViewHolder(
             LayoutInflater.from(
@@ -39,16 +38,15 @@ class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when (holder) {
             is PostViewHolder -> (
                     holder.bind(items[position])
-
                     )
         }
     }
 
-    fun submiDataList(blockList: List<Post>) {
+    fun submiDataList(blockList: ArrayList<Post>) {
         items = blockList
     }
 
-    class PostViewHolder
+    inner class PostViewHolder
     constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val autorText = itemView.autorText
         val postText = itemView.postText
@@ -63,8 +61,14 @@ class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val repostDateText = itemView.repostDateText
         val repostAutorText = itemView.repostAutorText
         val typePost = itemView.typePost
+        val imageHide = itemView.imageHide
 
         fun bind(post: Post) {
+            if (post.hidePost) {
+                items.remove(post)
+            }
+
+
             val requesoption = RequestOptions().placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_background)
             when (post.type) {
@@ -106,21 +110,8 @@ class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
                     repostAutorText.setText(post.autorRepost)
-                    val publishedAgo = (java.lang.System.currentTimeMillis() - post.dateRepost!!) / 1000
-                    val toMin = if (publishedAgo > 3599) {
-                        publishedAgo / 3600
-                    } else {
-                        publishedAgo / 60
-                    }
-                    val dateString = when (publishedAgo) {
-                        in 0..59 -> "менее минуты назад"
-                        in 60..179 -> "минуту назад"
-                        in 180..299 -> "$toMin минуты назад"
-                        in 300..3599 -> "$toMin минут назад"
-                        in 3600..17999 -> "$toMin часа назад"
-                        else -> "$toMin часов назад "
-                    }
-                    repostDateText.setText(dateString)
+
+                    repostDateText.setText(dateToString(post))
                     typePost.setText(R.string.Reposts)
                 }
 
@@ -153,21 +144,7 @@ class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
 
 
-            val publishedAgo = (java.lang.System.currentTimeMillis() - post.date) / 1000
-            val toMin = if (publishedAgo > 3599) {
-                publishedAgo / 3600
-            } else {
-                publishedAgo / 60
-            }
-            val dateString = when (publishedAgo) {
-                in 0..59 -> "менее минуты назад"
-                in 60..179 -> "минуту назад"
-                in 180..299 -> "$toMin минуты назад"
-                in 300..3599 -> "$toMin минут назад"
-                in 3600..17999 -> "$toMin часа назад"
-                else -> "$toMin часов назад "
-            }
-            datePost.setText(dateString)
+            datePost.setText(dateToString(post))
 
 
 
@@ -196,8 +173,32 @@ class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 }
                 itemView.context.startActivity(intent)
             }
+            imageHide.setOnClickListener {
+                post.hidePost = true
+                items.remove(post)
+                notifyDataSetChanged()
+
+            }
 
 
+        }
+
+        private fun dateToString(post: Post): String {
+            val publishedAgo = (System.currentTimeMillis() - post.date) / 1000
+            val toMin = if (publishedAgo > 3599) {
+                publishedAgo / 3600
+            } else {
+                publishedAgo / 60
+            }
+            val dateString = when (publishedAgo) {
+                in 0..59 -> "менее минуты назад"
+                in 60..179 -> "минуту назад"
+                in 180..299 -> "$toMin минуты назад"
+                in 300..3599 -> "$toMin минут назад"
+                in 3600..17999 -> "$toMin часа назад"
+                else -> "$toMin часов назад "
+            }
+            return dateString
         }
 
     }

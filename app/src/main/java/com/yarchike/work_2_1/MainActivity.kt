@@ -1,8 +1,6 @@
 package com.yarchike.work_2_1
 
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -37,6 +35,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun addData() {
         val data = PostData.getDataBase()
+        val iterator = data.listIterator()
+        while (iterator.hasNext()) {
+            if (iterator.next().hidePost) {
+                iterator.remove()
+            }
+        }
         postAdapter.submiDataList(data)
     }
 
@@ -46,11 +50,6 @@ class MainActivity : AppCompatActivity() {
         for (i in list) {
             Log.d("MyLog", i.toString())
         }
-    }
-
-
-    fun clicVideo(view: View) {
-
     }
 
 

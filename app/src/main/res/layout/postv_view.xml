@@ -171,10 +171,18 @@
         android:id="@+id/typePost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/repostImgAutor" />
+        app:layout_constraintTop_toBottomOf="@+id/imageHide" />
+
+    <ImageView
+        android:id="@+id/imageHide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_no_eye" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
