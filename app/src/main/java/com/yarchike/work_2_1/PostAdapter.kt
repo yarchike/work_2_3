@@ -176,7 +176,7 @@ class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             imageHide.setOnClickListener {
                 post.hidePost = true
                 items.remove(post)
-                notifyDataSetChanged()
+                notifyItemRemoved(adapterPosition)
 
             }
 
