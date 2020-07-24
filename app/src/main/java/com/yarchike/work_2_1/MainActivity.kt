@@ -20,12 +20,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var postAdapter: PostAdapter
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-       progressBar.visibility = ProgressBar.VISIBLE
+        progressBar.visibility = ProgressBar.VISIBLE
         initRecycleView()
         addData()
 
@@ -54,13 +53,13 @@ class MainActivity : AppCompatActivity() {
 
             var temp = 0
             var tempPost = 0
-            for (i in 0..dataPost.size-1){
+            for (i in 0..dataPost.size - 1) {
                 data.add(dataPost[i])
-                temp ++
-                if(temp == 3 && tempPost < dataSponser.size){
-                    temp=0
+                temp++
+                if (temp == 3 && tempPost < dataSponser.size) {
+                    temp = 0
                     data.add(dataSponser[tempPost])
-                    tempPost ++
+                    tempPost++
                 }
             }
 
@@ -68,21 +67,11 @@ class MainActivity : AppCompatActivity() {
             Log.d("MY", data.toString())
             postAdapter.submiDataList(data as ArrayList<Post>)
             postAdapter.notifyItemRangeInserted(0, data.size)
-            withContext(Main){
+            withContext(Main) {
                 progressBar.visibility = ProgressBar.GONE
             }
 
 
-
-
-        }
-    }
-
-
-    fun ClicList(viev: View) {
-        val list = postAdapter.getIteanList()
-        for (i in list) {
-            Log.d("MyLog", i.toString())
         }
     }
 
