@@ -12,7 +12,9 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.postv_view.view.*
 
 
-class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PostAdapter(
+    private val onLikeClicked: (Post) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items: ArrayList<Post> = ArrayList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -149,21 +151,13 @@ class PostAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
             likeImage.setOnClickListener {
-                if (post.isLike) {
-                    post.isLike = false
-                    post.like--
-                    likeImage.setImageResource(R.drawable.ic_no_like)
-                    likeText.setTextColor(Color.BLACK)
-                    likeText.text = post.like.toString()
-                } else {
-                    post.isLike = true
-                    post.like++
-                    likeImage.setImageResource(R.drawable.ic_like)
-                    likeText.setTextColor(Color.RED)
-                    likeText.text = post.like.toString()
-
-                }
+                (onLikeClicked(post))
             }
+
+
+
+
+
             imageLocal.setOnClickListener {
                 val (lat, lng) = post.coordinates
                 val geoUri = Uri.parse("geo:$lat,$lng")

@@ -1,13 +1,18 @@
 package com.yarchike.work_2_1
 
+import android.widget.Toast
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.get
+import io.ktor.client.request.post
 import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import java.net.ConnectException
 
 
 object PostData {
+
     private val client = HttpClient {
         install(JsonFeature) {
             serializer = GsonSerializer()
@@ -15,11 +20,25 @@ object PostData {
         }
     }
 
-    suspend fun getPosts(): List<Post> =
-        client.get(urlString = "https://raw.githubusercontent.com/yarchike/work_2_2_toJSON/master/posts.json")
-    suspend fun getPostSponsored( ): List<Post> =
+    suspend fun getPosts(): List<Post> {
+        var list = ArrayList<Post>()
+
+        list = client.get("http://93.179.85.126:5050/api/v1/posts")
+
+        return list
+    }
+
+
+    suspend fun getPostSponsored(): List<Post> =
         client.get(urlString = "https://raw.githubusercontent.com/yarchike/work_2_2_toJSON/master/posts_sponser.json")
+
+    suspend fun postPosts(post: Post): Post =
+        client.post("http://93.179.85.126:5050/api/v1/posts") {
+            body = post
+            contentType(ContentType.Application.Json)
+        }
 }
+
 
 
 
