@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,9 +40,9 @@ class MainActivity : AppCompatActivity() {
                 val postTemp = PostData.postPosts(post)
 
             } catch (e: ConnectException) {
-                /* withContext(Main){
-                    Toast.makeText(this, "Ошибка с соединенеие с сервером", Toast.LENGTH_LONG).show()
-                }*/
+                 withContext(Main){
+                     Toast.makeText(this@MainActivity, "Ошибка с соединенеие с сервером", Toast.LENGTH_LONG).show()
+                }
                 if (post.isLike) {
                     post.isLike = false
                     post.like--
