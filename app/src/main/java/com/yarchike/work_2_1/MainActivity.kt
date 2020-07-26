@@ -19,31 +19,21 @@ import java.net.ConnectException
 
 class MainActivity : AppCompatActivity() {
 
-    private val postAdapter: PostAdapter = PostAdapter { post ->
-        if (post.isLike) {
-            post.isLike = false
-            post.like--
-            likeImage.setImageResource(R.drawable.ic_no_like)
-            likeText.setTextColor(Color.BLACK)
-            likeText.text = post.like.toString()
-        } else {
-            post.isLike = true
-            post.like++
-            likeImage.setImageResource(R.drawable.ic_like)
-            likeText.setTextColor(Color.RED)
-            likeText.text = post.like.toString()
-
-        }
+    private val postAdapter: PostAdapter = PostAdapter() { post ->
 
         lifecycleScope.launch {
             try {
                 val postTemp = PostData.postPosts(post)
 
             } catch (e: ConnectException) {
-                 withContext(Main){
-                     Toast.makeText(this@MainActivity, "Ошибка с соединенеие с сервером", Toast.LENGTH_LONG).show()
+                withContext(Main) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Ошибка с соединенеие с сервером",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-                if (post.isLike) {
+                /*if (post.isLike) {
                     post.isLike = false
                     post.like--
                     likeImage.setImageResource(R.drawable.ic_no_like)
@@ -55,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                     likeImage.setImageResource(R.drawable.ic_like)
                     likeText.setTextColor(Color.RED)
                     likeText.text = post.like.toString()
-                }
+                }*/
             }
         }
     }
@@ -113,7 +103,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
             } catch (e: ConnectException) {
-
+                Toast.makeText(
+                    this@MainActivity,
+                    "Ошибка с соединенеие с сервером",
+                    Toast.LENGTH_LONG
+                ).show()
             }
 
         }

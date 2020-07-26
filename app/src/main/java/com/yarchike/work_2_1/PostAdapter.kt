@@ -151,7 +151,22 @@ class PostAdapter(
 
 
             likeImage.setOnClickListener {
+                if (post.isLike) {
+                    post.isLike = false
+                    post.like--
+                    likeImage.setImageResource(R.drawable.ic_no_like)
+                    likeText.setTextColor(Color.BLACK)
+                    likeText.text = post.like.toString()
+                } else {
+                    post.isLike = true
+                    post.like++
+                    likeImage.setImageResource(R.drawable.ic_like)
+                    likeText.setTextColor(Color.RED)
+                    likeText.text = post.like.toString()
+
+                }
                 (onLikeClicked(post))
+
             }
 
 
