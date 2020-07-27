@@ -1,11 +1,11 @@
 package com.yarchike.work_2_1
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.postv_view.view.*
 
 
 class PostAdapter(
-    private val onLikeClicked: (Post) -> Unit
+    private val onLikeClicked: (Post, View) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var items: ArrayList<Post> = ArrayList()
@@ -64,6 +64,7 @@ class PostAdapter(
         val repostAutorText = itemView.repostAutorText
         val typePost = itemView.typePost
         val imageHide = itemView.imageHide
+        val quantityView = itemView.quantityView
 
         fun bind(post: Post) {
             if (post.hidePost) {
@@ -147,25 +148,15 @@ class PostAdapter(
 
 
             datePost.setText(dateToString(post))
+            quantityView.setText(post.viewsPost.toString())
+
 
 
 
             likeImage.setOnClickListener {
-                if (post.isLike) {
-                    post.isLike = false
-                    post.like--
-                    likeImage.setImageResource(R.drawable.ic_no_like)
-                    likeText.setTextColor(Color.BLACK)
-                    likeText.text = post.like.toString()
-                } else {
-                    post.isLike = true
-                    post.like++
-                    likeImage.setImageResource(R.drawable.ic_like)
-                    likeText.setTextColor(Color.RED)
-                    likeText.text = post.like.toString()
 
-                }
-                (onLikeClicked(post))
+                (onLikeClicked(post, itemView))
+
 
             }
 
@@ -174,13 +165,22 @@ class PostAdapter(
 
 
             imageLocal.setOnClickListener {
-                val (lat, lng) = post.coordinates
-                val geoUri = Uri.parse("geo:$lat,$lng")
-                val intent = Intent().apply {
-                    action = Intent.ACTION_VIEW
-                    setData(geoUri)
+                try {
+                    val (lat, lng) = post.coordinates
+                    val geoUri = Uri.parse("geo:$lat,$lng")
+                    val intent = Intent().apply {
+                        action = Intent.ACTION_VIEW
+                        setData(geoUri)
+                    }
+                    itemView.context.startActivity(intent)
+                } catch (e: NullPointerException) {
+                    Toast.makeText(
+                        itemView.context,
+                        "Данных геопозиции не заданы",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-                itemView.context.startActivity(intent)
+
             }
             imageHide.setOnClickListener {
                 post.hidePost = true

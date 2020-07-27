@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.postv_view.*
+import kotlinx.android.synthetic.main.postv_view.view.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,8 +19,21 @@ import java.net.ConnectException
 
 class MainActivity : AppCompatActivity() {
 
-    private val postAdapter: PostAdapter = PostAdapter() { post ->
+    private val postAdapter: PostAdapter = PostAdapter() { post, view ->
+        if (post.isLike) {
+            post.isLike = false
+            post.like--
+            view.likeImage.setImageResource(R.drawable.ic_no_like)
+            view.likeText.setTextColor(Color.BLACK)
+            view.likeText.text = post.like.toString()
+        } else {
+            post.isLike = true
+            post.like++
+            view.likeImage.setImageResource(R.drawable.ic_like)
+            view.likeText.setTextColor(Color.RED)
+            view.likeText.text = post.like.toString()
 
+        }
         lifecycleScope.launch {
             try {
                 val postTemp = PostData.postPosts(post)
@@ -33,19 +46,22 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                /*if (post.isLike) {
+
+                if (post.isLike) {
                     post.isLike = false
                     post.like--
-                    likeImage.setImageResource(R.drawable.ic_no_like)
-                    likeText.setTextColor(Color.BLACK)
-                    likeText.text = post.like.toString()
+                    view.likeImage.setImageResource(R.drawable.ic_no_like)
+                    view.likeText.setTextColor(Color.BLACK)
+                    view.likeText.text = post.like.toString()
                 } else {
                     post.isLike = true
                     post.like++
-                    likeImage.setImageResource(R.drawable.ic_like)
-                    likeText.setTextColor(Color.RED)
-                    likeText.text = post.like.toString()
-                }*/
+                    view.likeImage.setImageResource(R.drawable.ic_like)
+                    view.likeText.setTextColor(Color.RED)
+                    view.likeText.text = post.like.toString()
+                }
+
+
             }
         }
     }

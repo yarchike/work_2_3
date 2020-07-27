@@ -1,6 +1,5 @@
 package com.yarchike.work_2_1
 
-import android.widget.Toast
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
@@ -8,7 +7,6 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import java.net.ConnectException
 
 
 object PostData {
