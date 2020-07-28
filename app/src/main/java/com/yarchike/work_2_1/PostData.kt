@@ -21,7 +21,7 @@ object PostData {
     suspend fun getPosts(): List<Post> {
         var list = ArrayList<Post>()
 
-        list = client.get("http://93.179.85.126:5050/api/v1/posts")
+        list = client.get("https://server-martynov.herokuapp.com/api/v1/posts")
 
         return list
     }
@@ -31,7 +31,7 @@ object PostData {
         client.get(urlString = "https://raw.githubusercontent.com/yarchike/work_2_2_toJSON/master/posts_sponser.json")
 
     suspend fun postPosts(post: Post): Post =
-        client.post("http://93.179.85.126:5050/api/v1/posts") {
+        client.post("https://server-martynov.herokuapp.com/api/v1/posts") {
             body = post
             contentType(ContentType.Application.Json)
         }
